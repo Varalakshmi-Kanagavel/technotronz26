@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   try {
     const auth = getAuthFromRequest(request)
 
-    if (!auth) {
+    if (!auth || !auth.userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -19,21 +19,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    // Find or create UserPayment document
-    let userPayment = await UserPayment.findOne({ userId: auth.userId })
+    // Calculate event fee based on email domain
+    const isPSGStudent = auth.email.endsWith("@psgtech.ac.in")
+    const eventFeeAmount = isPSGStudent ? 150 : 200
 
-    if (!userPayment) {
-      // No payment record exists - create default one
-      const isPSGStudent = auth.email.endsWith("@psgtech.ac.in")
-      const eventFeeAmount = isPSGStudent ? 150 : 200
-
-      userPayment = await UserPayment.create({
-        userId: auth.userId,
-        eventFeePaid: false,
-        eventFeeAmount,
-        workshopsPaid: [],
-      })
-    }
+    // Find or create UserPayment document using findOneAndUpdate with upsert
+    // This guarantees: no null userId, no duplicate inserts, one record per user
+    const userPayment = await UserPayment.findOneAndUpdate(
+      { userId: auth.userId },
+      { 
+        $setOnInsert: { 
+          email: auth.email,
+          eventFeePaid: false,
+          eventFeeAmount,
+          workshopsPaid: [],
+        } 
+      },
+      { upsert: true, new: true }
+    )
 
     return NextResponse.json({
       eventFeePaid: userPayment.eventFeePaid,

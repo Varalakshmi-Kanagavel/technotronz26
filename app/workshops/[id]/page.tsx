@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { FloatingParticles } from "@/components/floating-particles"
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
+import { useRouter } from "next/navigation"
 
 // Workshop data mapping
 const workshopData: Record<
@@ -115,15 +116,21 @@ const defaultWorkshop = {
   fileCode: "FILE W-XX",
 }
 
-export default function WorkshopDetailsPage({ params }: { params: { id: string } }) {
-  const { isLoggedIn, login } = useAuth()
-  const workshop = workshopData[params.id] || defaultWorkshop
+export default function WorkshopDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
+  const router = useRouter()
+  const { isLoggedIn, login, isLoading: authLoading } = useAuth()
+  const workshop = workshopData[id] || defaultWorkshop
   const [userData, setUserData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [isRegistering, setIsRegistering] = useState(false)
+  const [isPaying, setIsPaying] = useState(false)
 
   useEffect(() => {
     async function fetchUserData() {
+      if (authLoading) {
+        return // Wait for auth to resolve
+      }
       if (isLoggedIn) {
         try {
           const response = await fetch("/api/user/me")
@@ -142,12 +149,44 @@ export default function WorkshopDetailsPage({ params }: { params: { id: string }
     }
 
     fetchUserData()
-  }, [isLoggedIn])
+  }, [isLoggedIn, authLoading])
 
-  const workshopId = params.id.toUpperCase()
+  const workshopId = id.toUpperCase()
   const isRegistered = userData?.workshopsRegistered?.includes(workshopId) || false
   const paymentStatus = userData?.workshopPayments?.[workshopId] || "NOT_PAID"
   const isPaid = paymentStatus === "PAID"
+
+  const handlePayment = async () => {
+    setIsPaying(true)
+    try {
+      const response = await fetch("/api/payment/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "WORKSHOP", workshopId }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        alert(data.error || "Failed to initiate payment")
+        setIsPaying(false)
+        return
+      }
+
+      // Redirect to PayApp hosted payment page (or mock success page)
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl
+        return
+      }
+
+      alert("Payment initialization failed. Please try again.")
+      setIsPaying(false)
+    } catch (error) {
+      console.error("Payment error:", error)
+      alert("An error occurred. Please try again.")
+      setIsPaying(false)
+    }
+  }
 
   const handleRegister = async () => {
     setIsRegistering(true)
@@ -164,6 +203,7 @@ export default function WorkshopDetailsPage({ params }: { params: { id: string }
 
       if (!response.ok) {
         alert(result.error || "Registration failed")
+        setIsRegistering(false)
         return
       }
 
@@ -174,16 +214,16 @@ export default function WorkshopDetailsPage({ params }: { params: { id: string }
         setUserData(data)
       }
 
-      alert("Successfully registered for workshop!")
+      // After registration, redirect to payment
+      router.push(`/payment?message=Workshop+registered!+Please+complete+payment.`)
     } catch (error) {
       console.error("Error registering for workshop:", error)
       alert("An error occurred while registering")
-    } finally {
       setIsRegistering(false)
     }
   }
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <main className="relative min-h-screen bg-black flex items-center justify-center p-4">
         <FloatingParticles />
@@ -258,15 +298,6 @@ export default function WorkshopDetailsPage({ params }: { params: { id: string }
       {/* Content */}
       <div className="relative z-20 px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Back button */}
-          <Link
-            href="/events"
-            className="inline-flex items-center gap-2 text-red-500/70 hover:text-red-400 font-mono text-xs sm:text-sm tracking-wider mb-6 sm:mb-8 transition-colors"
-          >
-            <span>←</span>
-            <span>RETURN TO WORKSHOPS</span>
-          </Link>
-
           {/* Main Title */}
           <div className="text-center mb-8 sm:mb-12 animate-content-fade-in">
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-red-600 tracking-[0.1em] sm:tracking-[0.15em] mb-4 sm:mb-6 animate-flicker drop-shadow-[0_0_40px_rgba(220,38,38,0.9)]">
@@ -478,11 +509,28 @@ export default function WorkshopDetailsPage({ params }: { params: { id: string }
                 className="pt-4 sm:pt-6 text-center animate-section-fade-in opacity-0"
                 style={{ animationDelay: "1.4s", animationFillMode: "forwards" }}
               >
-                {isRegistered ? (
+                {isRegistered && isPaid ? (
+                  // Fully registered and paid
                   <div className="relative inline-block px-8 sm:px-12 py-3 sm:py-4 bg-green-950/20 border-2 border-green-600 text-green-400 text-sm sm:text-base font-mono tracking-widest">
-                    REGISTERED
+                    ✓ REGISTERED & PAID
                   </div>
+                ) : isRegistered && !isPaid ? (
+                  // Registered but payment pending
+                  <button
+                    onClick={handlePayment}
+                    disabled={isPaying}
+                    className="relative inline-block px-8 sm:px-12 py-3 sm:py-4 bg-transparent border-2 border-yellow-600 text-yellow-500 text-sm sm:text-base font-mono tracking-widest overflow-hidden transition-all duration-300 hover:bg-yellow-600/20 hover:text-yellow-400 hover:shadow-[0_0_30px_rgba(234,179,8,0.6)] group animate-pulse-glow-subtle disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      boxShadow: "0 0 20px rgba(234, 179, 8, 0.4), inset 0 0 20px rgba(234, 179, 8, 0.1)",
+                    }}
+                  >
+                    <span className="relative z-10 group-hover:animate-glitch-1">
+                      {isPaying ? "PROCESSING..." : "PAY NOW"}
+                    </span>
+                    <div className="absolute inset-0 bg-yellow-600/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-sm" />
+                  </button>
                 ) : (
+                  // Not registered yet
                   <button
                     onClick={handleRegister}
                     disabled={isRegistering}
@@ -492,7 +540,7 @@ export default function WorkshopDetailsPage({ params }: { params: { id: string }
                     }}
                   >
                     <span className="relative z-10 group-hover:animate-glitch-1">
-                      {isRegistering ? "REGISTERING..." : "REGISTER & PAY"}
+                      {isRegistering ? "REGISTERING..." : "REGISTER NOW"}
                     </span>
                     {/* Ripple effect on hover */}
                     <div className="absolute inset-0 bg-red-600/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-sm" />

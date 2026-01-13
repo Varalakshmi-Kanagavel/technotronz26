@@ -28,13 +28,16 @@ interface UserData {
 }
 
 export default function ProfilePage() {
-  const { isLoggedIn, user: authUser, login } = useAuth()
+  const { isLoggedIn, user: authUser, login, isLoading: authLoading } = useAuth()
   const [copied, setCopied] = useState(false)
   const [userData, setUserData] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchUserData() {
+      if (authLoading) {
+        return // Wait for auth to resolve
+      }
       if (isLoggedIn && authUser) {
         try {
           const response = await fetch("/api/user/me")
@@ -53,7 +56,7 @@ export default function ProfilePage() {
     }
 
     fetchUserData()
-  }, [isLoggedIn, authUser])
+  }, [isLoggedIn, authUser, authLoading])
 
   const copyTzId = () => {
     if (userData?.tzId) {
@@ -63,7 +66,7 @@ export default function ProfilePage() {
     }
   }
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <main className="relative min-h-screen bg-black overflow-hidden flex items-center justify-center">
         <FloatingParticles />

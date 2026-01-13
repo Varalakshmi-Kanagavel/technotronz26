@@ -8,18 +8,13 @@ import { usePathname } from "next/navigation"
 export function Navbar() {
   const { isLoggedIn, login } = useAuth()
   const pathname = usePathname()
+  const isHomePage = pathname === "/"
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[100] px-4 py-4 sm:px-8">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link href="/" className="group flex items-center gap-2">
-          <span className="font-serif text-xl sm:text-2xl text-red-600 tracking-tighter drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] group-hover:animate-flicker">
-            TECHNOTRONZ
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-6">
-          {/* Conditional links based on login status */}
+        {/* Left side - Navigation links (hidden on home page) */}
+        {!isHomePage ? (
           <div className="hidden sm:flex items-center gap-6 font-mono text-xs tracking-widest">
             <Link
               href="/"
@@ -44,7 +39,12 @@ export function Navbar() {
               </>
             )}
           </div>
+        ) : (
+          <div />
+        )}
 
+        {/* Right side - Profile */}
+        <div className="flex items-center gap-6">
           {isLoggedIn ? (
             <ProfileDropdown />
           ) : (

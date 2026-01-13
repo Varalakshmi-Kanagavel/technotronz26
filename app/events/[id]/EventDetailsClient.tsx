@@ -107,15 +107,6 @@ export default function EventDetailsClient({
       {/* Content */}
       <div className="relative z-20 px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Back button */}
-          <Link
-            href="/events"
-            className="inline-flex items-center gap-2 text-red-500/70 hover:text-red-400 font-mono text-xs sm:text-sm tracking-wider mb-6 sm:mb-8 transition-colors"
-          >
-            <span>←</span>
-            <span>RETURN TO EVENTS</span>
-          </Link>
-
           {/* Main Title */}
           <div className="text-center mb-8 sm:mb-12 animate-content-fade-in">
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-red-600 tracking-[0.1em] sm:tracking-[0.15em] mb-4 sm:mb-6 animate-flicker drop-shadow-[0_0_40px_rgba(220,38,38,0.9)]">

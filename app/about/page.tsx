@@ -65,7 +65,7 @@ export default function AboutPage() {
 
       {/* Main Content */}
       <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:px-6 lg:px-8">
-        {/* Section Title */}}
+        {/* Section Title */}
         <div className="text-center mb-8 sm:mb-12 animate-content-fade-in w-full">
           <h1
             className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-red-600 tracking-widest animate-flicker text-balance max-w-[90%] mx-auto"

@@ -214,12 +214,15 @@ function EventCard({
 }
 
 export default function EventsPage() {
-  const { isLoggedIn, login, user } = useAuth()
+  const { isLoggedIn, login, user, isLoading: authLoading } = useAuth()
   const [userData, setUserData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchUserData() {
+      if (authLoading) {
+        return // Wait for auth to resolve
+      }
       if (isLoggedIn) {
         try {
           const response = await fetch("/api/user/me")
@@ -238,7 +241,7 @@ export default function EventsPage() {
     }
 
     fetchUserData()
-  }, [isLoggedIn])
+  }, [isLoggedIn, authLoading])
 
   const handleRegisterEvent = async (eventId: string) => {
     try {
@@ -271,7 +274,7 @@ export default function EventsPage() {
     }
   }
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <main className="relative min-h-screen bg-black overflow-hidden flex items-center justify-center">
         <div className="text-red-500 font-mono">Loading...</div>

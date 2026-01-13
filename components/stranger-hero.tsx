@@ -13,11 +13,13 @@ export default function StrangerHero() {
     minutes: 0,
     seconds: 0,
   })
+  const [isGateOpened, setIsGateOpened] = useState(false)
 
   useEffect(() => {
     setMounted(true)
 
-    const targetDate = new Date("February 28, 2025 00:00:00").getTime()
+    // Target: February 7, 2026 at 9:00 AM
+    const targetDate = new Date("February 7, 2026 09:00:00").getTime()
 
     const timer = setInterval(() => {
       const now = new Date().getTime()
@@ -26,6 +28,7 @@ export default function StrangerHero() {
       if (distance < 0) {
         clearInterval(timer)
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+        setIsGateOpened(true)
       } else {
         setTimeLeft({
           days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -142,36 +145,38 @@ export default function StrangerHero() {
         {/* Simplified countdown grid for better mobile stacking */}
         <div className="mt-4 sm:mt-8 flex flex-col items-center gap-6 sm:gap-8">
           <p className="text-[9px] sm:text-[11px] font-bold tracking-[0.4em] text-red-500/80 uppercase animate-flicker">
-            THE GATE OPENS IN
+            {isGateOpened ? "UPSIDE DOWN GATE OPENED!!" : "THE GATE OPENS IN"}
           </p>
 
-          <div className="flex items-center justify-center gap-2 sm:gap-6 md:gap-8">
-            {[
-              { label: "DD", value: timeLeft.days },
-              { label: "HH", value: timeLeft.hours },
-              { label: "MM", value: timeLeft.minutes },
-              { label: "SS", value: timeLeft.seconds },
-            ].map((unit, i) => (
-              <div key={unit.label} className="flex items-center gap-2 sm:gap-6 md:gap-8">
-                <div className="flex flex-col items-center gap-3 group">
-                  <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center bg-red-950/20 border border-red-900/40 rounded-lg backdrop-blur-md group-hover:border-red-600/60 transition-all duration-500 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse-glow" />
-                    <span className="text-xl xs:text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]">
-                      {String(unit.value).padStart(2, "0")}
+          {!isGateOpened && (
+            <div className="flex items-center justify-center gap-2 sm:gap-6 md:gap-8">
+              {[
+                { label: "DD", value: timeLeft.days },
+                { label: "HH", value: timeLeft.hours },
+                { label: "MM", value: timeLeft.minutes },
+                { label: "SS", value: timeLeft.seconds },
+              ].map((unit, i) => (
+                <div key={unit.label} className="flex items-center gap-2 sm:gap-6 md:gap-8">
+                  <div className="flex flex-col items-center gap-3 group">
+                    <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center bg-red-950/20 border border-red-900/40 rounded-lg backdrop-blur-md group-hover:border-red-600/60 transition-all duration-500 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse-glow" />
+                      <span className="text-xl xs:text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]">
+                        {String(unit.value).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <span className="text-[7px] sm:text-[10px] tracking-[0.2em] text-red-200/50 uppercase font-light">
+                      {unit.label}
                     </span>
                   </div>
-                  <span className="text-[7px] sm:text-[10px] tracking-[0.2em] text-red-200/50 uppercase font-light">
-                    {unit.label}
-                  </span>
+                  {i < 3 && (
+                    <span className="text-lg sm:text-3xl md:text-4xl font-serif text-red-600/50 animate-flicker self-start mt-4 sm:mt-8 md:mt-10">
+                      :
+                    </span>
+                  )}
                 </div>
-                {i < 3 && (
-                  <span className="text-lg sm:text-3xl md:text-4xl font-serif text-red-600/50 animate-flicker self-start mt-4 sm:mt-8 md:mt-10">
-                    :
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-8 sm:mt-16 lg:mt-20">
