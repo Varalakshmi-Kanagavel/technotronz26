@@ -36,7 +36,7 @@ function PaymentContent() {
             const isPSGStudent = userEmail.endsWith("@psgtech.ac.in")
             setPaymentStatus({
               eventFeePaid: false,
-              eventFeeAmount: isPSGStudent ? 150 : 200,
+              eventFeeAmount: isPSGStudent ? 1 : 200,
               workshopsPaid: [],
             })
           }

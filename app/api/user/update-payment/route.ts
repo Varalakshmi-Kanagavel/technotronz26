@@ -51,7 +51,7 @@ export async function PATCH(request: NextRequest) {
       // Create new UserPayment document
       const userEmail = user.email
       const isPSGStudent = userEmail.endsWith("@psgtech.ac.in")
-      const eventFeeAmount = isPSGStudent ? 150 : 200
+      const eventFeeAmount = isPSGStudent ? 1 : 200
 
       userPayment = await UserPayment.create({
         userId: targetUserId,
@@ -75,7 +75,7 @@ export async function PATCH(request: NextRequest) {
       // Ensure eventFeeAmount is set correctly based on email
       const userEmail = user.email
       const isPSGStudent = userEmail.endsWith("@psgtech.ac.in")
-      userPayment.eventFeeAmount = isPSGStudent ? 150 : 200
+      userPayment.eventFeeAmount = isPSGStudent ? 1 : 200
     }
 
     // Update workshop payments
