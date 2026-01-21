@@ -13,6 +13,7 @@ const eventData: Record<
     title: string
     description: string[]
     rounds?: { name: string; description: string }[]
+    
     venue?: string
     requirements?: string[]
     EntryFee: string
@@ -20,87 +21,55 @@ const eventData: Record<
     rules: string[]
     coordinators: { name: string; phone: string }[]
     fileCode: string
-    mode?: string
+    topics?: string[]
+    mode?: string  
+    
   }
 > = {
   "workshop-1": {
-    title: "WORKSHOP 1",
+    title: "LoRa Based IoT Application Development",
     description: [
-      "Venture into the unknown depths of emerging technology where reality bends and possibilities are limitless.",
-      "This classified briefing will expose you to advanced systems that exist beyond conventional understanding.",
-      "Only those brave enough to face the shadows of innovation will emerge with knowledge from the other side.",
+      "This workshop provides participants with a solid introduction to Internet of Things (IoT) technology through a blend of conceptual learning and hands-on experience.","It covers embedded systems, microcontrollers, sensors, and key communication protocols used in real-world IoT applications.","Participants will work with platforms such as Arduino and thingZkit Mini, along with wireless technologies like LoRa and LoRaWAN.", "The workshop also introduces cloud integration and data visualization for complete IoT solutions.", "By the end, participants will gain practical skills to work with modern hardware, collaborate ethically in teams or individually, and design innovative IoT solutions tailored to industry and client needs.",
     ],
-    rounds: [
-      { name: "Round 1", description: "Exploration Phase - Navigate the foundational concepts" },
-      { name: "Round 2", description: "Final Showdown - Apply your knowledge in the ultimate test" },
-    ],
+   
+    venue: "E-Block Lab 204",
+    dateTime: "February 07, 2026 — 9:00 AM to 4:00 PM",
     mode: "Offline",
-    dateTime: "February 28, 2025 — 10:00 AM to 1:00 PM",
+  
     rules: [
-      "Participants must arrive 15 minutes before the scheduled time",
-      "Bring your own laptop with required software pre-installed",
-      "Team size: 2-3 members",
-      "No external assistance or internet access during rounds",
+      "Participation : Individual",   
     ],
+    
     coordinators: [
-      { name: "John Doe", phone: "9876543210" },
-      { name: "Jane Doe", phone: "9876543211" },
+      { name: "Murali", phone: "93426 28687" },
+      { name: "Prahalya", phone: "93451 32434" },
     ],
     EntryFee: "200 for non-PSG Tech, 250 for PSG Tech",
     fileCode: "FILE-001",
   },
   "workshop-2": {
-    title: "WORKSHOP 2",
+    title: "ModelCraft with MATLAB - Simulink for Industrial Applications",
     description: [
-      "Explore the parallel dimensions of innovation where technology transcends its earthly limitations.",
-      "Hands-on experiments with cutting-edge tools that blur the line between science and the supernatural.",
-      "The veil between worlds grows thin as you master techniques from realms unknown.",
+     "This workshop introduces Model-Based Development using MATLAB and Simulink for industrial applications, offering a systematic approach to designing, simulating, and validating complex systems. Participants will learn how mathematical models form the foundation of system development, enabling early testing, analysis, and optimization before hardware implementation. The workshop covers building dynamic models, performance evaluation, and automatic code generation for real-time and embedded systems. Industry-focused examples from control systems, automotive engineering, power electronics, and automation are explored. Through guided demonstrations and hands-on exercises, participants will understand how model-based design improves accuracy, reduces development time, and enhances reliability, preparing them for modern, industry-standard engineering workflows.",
     ],
-    rounds: [
-      { name: "Round 1", description: "Discovery Phase - Uncover hidden technological secrets" },
-      { name: "Round 2", description: "Implementation Phase - Build something extraordinary" },
-    ],
-    mode: "Offline",
-    dateTime: "February 28, 2025 — 2:00 PM to 5:00 PM",
+
+  
+    venue: "Tech Hub - Room 302",
+    dateTime: "February 7, 2026 — 9.00 AMto 4:00 PM",
+    mode:"Offline",
+
+    
     rules: [
-      "Individual participation only",
-      "Basic programming knowledge required",
-      "Materials will be provided on-site",
-      "Certificates awarded to all participants",
+      "Participation : Individual",
     ],
     coordinators: [
-      { name: "Mike Wheeler", phone: "9876543212" },
-      { name: "Eleven", phone: "9876543213" },
+      { name: "Pavithran S Y ", phone: "93456 93986" },
+      { name: " Nishanth ", phone: "73058 54418" },
     ],
     EntryFee: "200 for non-PSG Tech, 250 for PSG Tech",
     fileCode: "FILE-002",
   },
-  "workshop-3": {
-    title: "WORKSHOP 3",
-    description: [
-      "Unlock hidden potentials in the realm of tech where the impossible becomes inevitable.",
-      "Secrets from the Upside Down revealed to those who dare to look beyond the surface.",
-      "Transform your understanding of technology in ways that defy conventional explanation.",
-    ],
-    rounds: [
-      { name: "Round 1", description: "Initiation - Enter the realm of advanced concepts" },
-      { name: "Round 2", description: "Mastery - Prove your worth in the final challenge" },
-    ],
-    mode: "Offline",
-    dateTime: "March 1, 2025 — 9:00 AM to 12:00 PM",
-    rules: [
-      "Pre-registration mandatory",
-      "Bring government-issued ID for verification",
-      "Limited seats available - first come, first served",
-      "No photography or recording allowed",
-    ],
-    coordinators: [
-      { name: "Dustin Henderson", phone: "9876543214" },
-      { name: "Lucas Sinclair", phone: "9876543215" },
-    ],
-    EntryFee: "200 for non-PSG Tech, 250 for PSG Tech",
-    fileCode: "FILE-003",
-  },
+  
   hackathon: {
     title: "HACKATHON",
     description: [
@@ -155,28 +124,40 @@ const eventData: Record<
     EntryFee: "200 for non-PSG Tech, 250 for PSG Tech",
     fileCode: "FILE-005",
   },
-  "bot-lf": {
-    title: "BOT LF",
+  "bot-1": {
+    title: "PATHTRONIX",
     description: [
-      "Line following automatons navigate the dark corridors of the Upside Down.",
-      "Program your creation to sense the path through shadow and light.",
-      "Only the most precise machines will find their way through the maze.",
+    "PathTronix is an exciting Line Following Robot Challenge that invites participants to design and program autonomous robots capable of navigating a predefined track using intelligent line-following techniques.","The event unfolds across multiple rounds, each testing precision, speed ,adaptability, and control.","From sharp curves and intersections to ramps and obstacles, teams must showcase robust design and smart .",
     ],
     rounds: [
-      { name: "Round 1", description: "Time Trials - Complete the track" },
-      { name: "Round 2", description: "Final Race - Head-to-head competition" },
+      { name: "Round 1:Tracron ", description: "This round tests the robot’s ability to handle a dynamic track filled with straight and dashed lines, sharp turns, false paths, and misleading trails.Precision sensing, quick correction, and intelligent path selection are crucial to avoid distractions.Teams must strike the perfect balance between speed and accuracy, as smooth navigation can be the key to advancing further." },
+      { name: "Round 2: SmackBot", description: "The challenge escalates with the introduction of ramps and solid obstacles. Robots must maintain stability and line tracking while tackling elevation changes and physical barriers. Strong mechanical design, proper traction, and efficient obstacle-handling strategies are essential. This round pushes teams to demonstrate resilience, recovery skills, and advanced navigation under tougher conditions." },
     ],
-    mode: "Offline",
-    dateTime: "March 1, 2025 — 10:00 AM to 2:00 PM",
+    venue: "Robotics Arena - Ground Floor",
+    dateTime: "February 8, 2026 - 9:00 AM to 1:00 PM",
+    "mode" : "Offline",
+    
+    
     rules: [
-      "Bot dimensions: Max 20cm x 20cm",
-      "Pre-built bots allowed",
-      "Maximum 2 attempts per round",
-      "No wireless controllers",
+    "Participation : Individual / Team of maximum 4 members",
+    "The practice track and the actual competition track will be different",
+    "The time recorded by the organizers will be taken as final for scoring",
+    "If a robot goes off the line, it must restart from the nearest checkpoint already crossed",
+    "Robots must not damage the track or leave marks on it; any damage will lead to immediate disqualification",
+    "The maximum time allowed per run is 3 to 5 minutes, depending on the round",
+    "Bot Requirements:",
+    "Only fully autonomous robots are allowed; remote-controlled robots are not permitted",
+    "Robots must run only on onboard power (no external power supply)",
+    "Robot size must not exceed 20 × 20 × 10  (L × W × H) in cm",
+    "Track length will be 15 to 20 meters, depending on the round",
+    "Line width will be 20 to 25 mm",
+    "Obstacles will be 10 cm cubes weighing 20 to 50 grams",
+    "Ramp inclination will be 20 to 25 degrees",
+    "Gaps in dashed lines will be 20 to 25 mm",
     ],
     coordinators: [
-      { name: "Jonathan Byers", phone: "9876543220" },
-      { name: "Argyle", phone: "9876543221" },
+      { name: "Jayasri Rani S ", phone: "9360737144" },
+      { name: "Pavithran S Y ", phone: "93456 93986" },
     ],
     EntryFee: "200 for non-PSG Tech, 250 for PSG Tech",
     fileCode: "FILE-006",
@@ -378,53 +359,76 @@ const eventData: Record<
     fileCode: "FILE-013",
   },
   "paper-presentation-1": {
-    title: "PAPER PRESENTATION 1",
+    title: "UPSPIRE",
     description: [
-      "Present your research findings from the depths of the unknown scientific frontier.",
-      "Share discoveries that challenge conventional understanding of our world.",
-      "The brightest minds gather to illuminate the darkness with knowledge.",
+     "Upspire, the Paper Presentation event of Technotronz’26, invites participants into an Upside Down of innovation and imagination. Inspired by sci fi themes, it explores communication systems, embedded tech, sustainability, and IoT. Through a two stage process, ideas evolve into impactful presentations, guided by expert feedback, creativity, and discussions as electrifying as Hawkins."
     ],
     rounds: [
-      { name: "Round 1", description: "Abstract Submission Review" },
-      { name: "Round 2", description: "Presentation & Q&A" },
+      { name: "Round 1:Pitchkinz", description: "Pitchkinz, the initial screening phase of Upspire, requires teams to select an approved topic and submit a concise abstract outlining concept, objectives, and technical approach. Emphasizing clarity, originality, and relevance, submissions are reviewed for innovation and alignment, with only strong ideas advancing." },
+      { name: "Round 2:Demodownz", description: "Demodownz, the final stage of Upspire, requires shortlisted teams to deliver a 8 minute structured presentation followed by a 2 minute Q&A session with the judges. Evaluation emphasizes innovation, technical depth, feasibility, clarity, and impact, with the most compelling presentations earning recognition." },
     ],
+
+    venue: "Conference Room - Block A",
+    dateTime: "February 7, 2026 - 9:00 AM to 12:00 PM",
+
     mode: "Offline",
-    dateTime: "February 28, 2025 — 9:00 AM to 12:00 PM",
+   
     rules: [
-      "Team size: 1-2 members",
-      "10 minutes presentation + 5 minutes Q&A",
-      "PPT format only",
-      "Original research preferred",
+      "Individual / Team of maximum 4 members",
+      "Abstract submission deadline : 01/02/2026",
+      "Submission mail id : technotronz26pp1iete@gmail.com",
+      "For round 1:Only participants who have completed the general registration process will be considered for evaluation. Abstracts must be submitted within the specified deadline to qualify for shortlisting.",
+     
     ],
+   
+  "topics": [
+  "SignalSphere - Advancements in Long-Range Wireless Communication for Smarter Connectivity",
+  "EtherLink Networks - Next-Generation Communication Protocols Enhancing Low-Power IoT Systems",
+  "AeroComm Dynamics - Wireless Sensor Networks for Reliable Environmental Monitoring",
+  "EmbedX Dynamics - Real-Time Embedded Architectures for Intelligent Control Systems",
+  "ControlMatrix - Adaptive Embedded Control for Automation and Smart Devices",
+  "GreenCircuit Solutions - Low-Power Electronic Design for Sustainable Technology",
+  "IoT Nexus - Cloud-Connected IoT Platforms for Smarter Urban Innovations",
+  "EcoSense Networks - IoT-Enabled Smart Monitoring for Environmental Conservation",
+  "RenewEdge Systems - Embedded and IoT Approaches for Enhancing Renewable Energy Applications",
+  "SustainGrid - Smart Energy Management Using Sensor Networks and Automation"
+],
+
     coordinators: [
-      { name: "Scott Clarke", phone: "9876543236" },
-      { name: "Principal Coleman", phone: "9876543237" },
+      { name: "P. U. Jagadhish Kumaar ", phone: "9952513520" },
+      { name: "Vishal ", phone: "8523944845" },
     ],
     EntryFee: "200 for non-PSG Tech, 250 for PSG Tech",
     fileCode: "FILE-014",
   },
   "paper-presentation-2": {
-    title: "PAPER PRESENTATION 2",
+    title: "INQUISTA",
     description: [
-      "Share discoveries that defy conventional understanding and open new portals of thought.",
-      "Your research could be the key to unlocking mysteries yet unsolved.",
-      "Present to the council and change the course of technological history.",
+     "Inquista is the Paper Presentation event of Technotronz’26, offering a dynamic platform for students to explore innovation through research, technical analysis, and creative problem-solving. The event focuses on both hardware and software domains through a structured two-round format, participants refine their concepts and present them before an experienced panel of judges, emphasizing originality, clarity, and technical depth."
     ],
     rounds: [
-      { name: "Round 1", description: "Paper Screening" },
-      { name: "Round 2", description: "Live Presentation" },
+      { name: "Round 1 : Technix", description: "Technix, the preliminary screening round of Upspire, requires participants to choose an approved topic and submit an abstract detailing idea, objectives, and technical approach. Emphasizing clarity, relevance, feasibility, and innovation, only teams with strong foundational concepts are shortlisted for the next stage." },
+      { name: "Round 2 : Explora", description: "Explora, the final round of Upspire, requires shortlisted teams to present their work in detail before judges. Each team delivers an 8 minute structured presentation followed by a 2 minute Q&A. Evaluation focuses on technical depth, clarity, presentation quality, and real world relevance." },
     ],
+
+    venue: "Conference Room - Block B",
+    dateTime: "February 7, 2026 - 9:00 AM to 12:00 PM",
+
     mode: "Offline",
-    dateTime: "March 1, 2025 — 9:00 AM to 12:00 PM",
+ 
+
     rules: [
-      "IEEE format required",
-      "Plagiarism check mandatory",
-      "Domain: AI/ML, IoT, Cybersecurity",
-      "Best paper award available",
+      "Participation : Individual / Team of maximum 4 members",
+      "Abstract submission deadline : 01/02/2026",
+      "Submission mail id : technotronz26pp2iete@gmail.com",
+      "For round 1:Only participants who have completed the general registration process will be considered for evaluation. Abstracts must be submitted within the specified deadline to qualify for shortlisting. ",
     ],
+    "topics":["Artificial Intelligence - Basics and Real-World Applications","Machine Learning - Algorithms and Practical Applications","Cyber Security -Threats, Attacks, and Protection Techniques","Cloud Computing - Architecture and Service Models (IaaS, PaaS, SaaS)","Blockchain Technology - Secure and Decentralized Digital Systems","VLSI Design Flow - From Specification to Fabrication","5G Technology - Architecture, Features, and Applications","Internet of Things (IoT) - Architecture and Smart Applications","Sensors and Actuators - Core Building Blocks of Robotic Systems","PID Control Systems - Control of Mobile and Autonomous Robots"],
+
+
     coordinators: [
-      { name: "Alexei", phone: "9876543238" },
-      { name: "Yuri", phone: "9876543239" },
+      { name: "Rohini", phone: "8838619825" },
+      { name: "Lijith", phone: "6382145569" },
     ],
     EntryFee: "200 for non-PSG Tech, 250 for PSG Tech",
     fileCode: "FILE-015",
