@@ -139,9 +139,17 @@ export async function POST(request: NextRequest) {
 
     // LIVE MODE: Proceed with PayApp encryption
 
+    // Get base URL for callback
+    const baseUrl = process.env.BASE_URL || process.env.NEXTAUTH_URL || "http://localhost:3000"
+    
+    // CRITICAL: Ensure callback URL is absolute and properly formatted
+    // PayApp needs to redirect here after payment with encrypted result
+    const callbackUrl = `${baseUrl}/payment/payapp-callback`
+    
+    console.log("[Payment] Setting callback URL:", callbackUrl)
+    console.log("[Payment] BASE_URL from env:", process.env.BASE_URL)
+
     // Prepare PayApp payload
-    // NOTE: client_returnurl should be a short identifier (max 15 chars as per API docs)
-    // The actual callback URL is configured in PayApp admin panel
     const payload = {
       reg_id,
       name: user.name || "Participant",
@@ -149,18 +157,29 @@ export async function POST(request: NextRequest) {
       category: type === "EVENT" ? PAYAPP_CATEGORIES.EVENT : PAYAPP_CATEGORIES[workshopId!],
       txn_id,
       amt: amount.toString(),
-      client_returnurl: "technotronz26",  // Short identifier, max 15 chars
+      client_returnurl: callbackUrl,
       provider: "2",
     }
 
+    console.log("[Payment] Full payload being sent to PayApp:", JSON.stringify(payload, null, 2))
+
     // Encrypt payload using PayApp API
-    const encrypted = await encryptPayApp(payload)
+    const encryptedOrUrl = await encryptPayApp(payload)
 
-    // Build redirect URL for PayApp hosted payment page
-    // Correct URL: /Pay?data=<encrypted> (NOT /PayApp)
-    const payAppUrl = `https://cms.psgps.edu.in/payappapi_test/PayAppapi/Pay?data=${encodeURIComponent(encrypted)}`
-
-    console.log("[Payment] Redirecting to PayApp:", payAppUrl.substring(0, 100) + "...")
+    // The encryption API may return:
+    // 1. A full redirect URL (from Location header) - use directly
+    // 2. Just encrypted data - build URL manually
+    let payAppUrl: string
+    
+    if (encryptedOrUrl.startsWith("http")) {
+      // Already a full URL from Location header
+      payAppUrl = encryptedOrUrl
+      console.log("[Payment] Using redirect URL from PayApp:", payAppUrl.substring(0, 100) + "...")
+    } else {
+      // Just encrypted data, build URL manually
+      payAppUrl = `https://cms.psgps.edu.in/payappapi_test/PayAppapi/Pay?data=${encodeURIComponent(encryptedOrUrl)}`
+      console.log("[Payment] Built PayApp URL with encrypted data:", payAppUrl.substring(0, 100) + "...")
+    }
 
     // Return redirect URL for browser navigation
     return NextResponse.json({

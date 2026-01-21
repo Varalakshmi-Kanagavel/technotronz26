@@ -4,7 +4,7 @@ export interface IUserPayment extends Document {
   userId: mongoose.Types.ObjectId
   email?: string
   eventFeePaid: boolean
-  eventFeeAmount: number // 150 for PSG students, 200 for others
+  eventFeeAmount: number // 1 for PSG students, 200 for others
   workshopsPaid: string[] // Array of workshop IDs that are paid
   
   createdAt: Date

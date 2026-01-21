@@ -8,16 +8,17 @@ interface EventDetailsClientProps {
   eventId: string
   event: {
     title: string
-    topics?: string[]
-
+    mode?: string 
     description: string[]
-    rounds: { name: string; description: string }[]
-    mode?: string
+    rounds?: { name: string; description: string }[]
+    venue?: string
+    requirements?: string[]
+    EntryFee: string
     dateTime: string
-    requirements?:string[]
     rules: string[]
     coordinators: { name: string; phone: string }[]
-    fileCode?: string
+    fileCode: string
+
   }
   isRegistered: boolean
   eventFeePaid: boolean
@@ -186,7 +187,7 @@ export default function EventDetailsClient({
                   NUMBER OF ROUNDS
                 </h3>
                 <ul className="space-y-2">
-                  {event.rounds.map((round, i) => (
+                  {event.rounds && event.rounds.map((round, i) => (
                     <li
                       key={i}
                       className="text-gray-400 text-sm sm:text-base flex items-start gap-2 animate-list-item-fade opacity-0"
@@ -215,7 +216,7 @@ export default function EventDetailsClient({
                   </h3>
                   <p className="text-gray-400 text-sm sm:text-base flex items-center gap-2">
                     <span className="text-red-600">◉</span>
-                    {event.mode}
+                    {event.mode || "Offline"}
                   </p>
                 </section>
 
@@ -261,35 +262,11 @@ export default function EventDetailsClient({
                   </p>
                 </div>
               </section>
-              {event.topics && event.topics.length > 0 && (
-  <>
-    {/* Divider */}
-    <div className="h-px bg-gradient-to-r from-transparent via-red-800/50 to-transparent" />
 
-    <section
-      className="animate-content-fade-in opacity-0"
-      style={{ animationDelay: "0.7s", animationFillMode: "forwards" }}
-    >
-      <h3 className="font-serif text-lg sm:text-xl text-red-500 tracking-wider mb-3">
-        TOPICS
-      </h3>
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-red-800/50 to-transparent" />
 
-      <ul className="space-y-2">
-        {event.topics.map((topic, index) => (
-          <li
-            key={index}
-            className="text-gray-400 text-sm sm:text-base flex items-start gap-2"
-          >
-            <span className="text-red-600 mt-1">◉</span>
-            <span>{topic}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  </>
-)}
-
-{/* Event Requirements */}
+              {/* Event Requirements */}
               {event.requirements && event.requirements.length > 0 && (
                 <>
                   <section

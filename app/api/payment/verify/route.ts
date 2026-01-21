@@ -40,8 +40,14 @@ async function handleVerification(encryptedString: string | null) {
       return NextResponse.redirect(`${baseUrl}/payment/success?txn_id=${payment.txn_id}`)
     }
 
+    // Debug: Log the exact txnstatus value and type
+    console.log("Payment verify - txnstatus value:", decrypted.txnstatus)
+    console.log("Payment verify - txnstatus type:", typeof decrypted.txnstatus)
+    console.log("Payment verify - txnstatus === '1':", decrypted.txnstatus === "1")
+    console.log("Payment verify - txnstatus == 1:", decrypted.txnstatus == "1")
+
     // Check if payment was successful (txnstatus "1" = success)
-    if (decrypted.txnstatus === "1") {
+    if (decrypted.txnstatus === "1" || decrypted.txnstatus === 1) {
       // Update payment status
       payment.status = "SUCCESS"
       await payment.save()
@@ -94,7 +100,7 @@ async function handleVerification(encryptedString: string | null) {
   }
 }
 
-// POST handler - for PayApp callback
+// POST handler - for direct API calls (optional)
 export async function POST(request: NextRequest) {
   try {
     const contentType = request.headers.get("content-type") || ""
@@ -102,20 +108,20 @@ export async function POST(request: NextRequest) {
 
     if (contentType.includes("application/json")) {
       const body = await request.json()
-      encrypted = body.dycryptstring
+      encrypted = body.data || body.dycryptstring
     } else if (contentType.includes("application/x-www-form-urlencoded")) {
       const formData = await request.formData()
-      encrypted = formData.get("dycryptstring") as string
+      encrypted = (formData.get("data") || formData.get("dycryptstring")) as string
     } else {
       // Try to parse as JSON anyway
       try {
         const body = await request.json()
-        encrypted = body.dycryptstring
+        encrypted = body.data || body.dycryptstring
       } catch {
         const text = await request.text()
         // Check if it's URL encoded
         const params = new URLSearchParams(text)
-        encrypted = params.get("dycryptstring")
+        encrypted = params.get("data") || params.get("dycryptstring")
       }
     }
 
@@ -127,8 +133,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET handler - for PayApp callback (some gateways use GET)
+// GET handler - for PayApp callback (PayApp sends ?data=encrypted)
 export async function GET(request: NextRequest) {
-  const encrypted = request.nextUrl.searchParams.get("dycryptstring")
+  // PayApp sends encrypted data as ?data=encrypted
+  const encrypted = request.nextUrl.searchParams.get("data") || request.nextUrl.searchParams.get("dycryptstring")
+  console.log("[Payment Verify GET] Received encrypted data, length:", encrypted?.length || 0)
   return handleVerification(encrypted)
 }
