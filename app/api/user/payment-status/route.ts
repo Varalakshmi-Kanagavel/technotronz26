@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate event fee based on email domain
     const isPSGStudent = auth.email.endsWith("@psgtech.ac.in")
-    const eventFeeAmount = isPSGStudent ? 150 : 200
+    const eventFeeAmount = isPSGStudent ? 1 : 200
 
     // Find or create UserPayment document using findOneAndUpdate with upsert
     // This guarantees: no null userId, no duplicate inserts, one record per user

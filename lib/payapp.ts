@@ -10,10 +10,10 @@ export const WORKSHOP_FEES: Record<string, number> = {
 
 // Category mapping for PayApp (as per API docs - Char(1))
 export const PAYAPP_CATEGORIES: Record<string, string> = {
-  "EVENT": "5",
-  "W-01": "6",
-  "W-02": "7",
-  "W-03": "8",
+  "EVENT": "20",
+  "W-01": "20",
+  "W-02": "20",
+  "W-03": "20",
 }
 
 // Provider codes (as per API docs)
@@ -24,12 +24,12 @@ export const PAYAPP_PROVIDERS = {
 
 // Get event fee based on email domain
 export function getEventFee(email: string): number {
-  return email.endsWith("@psgtech.ac.in") ? 150 : 200
+  return email.endsWith("@psgtech.ac.in") ? 1 : 200
 }
 
 // PayApp API endpoints (test environment)
 const PAYAPP_ENCRYPT_URL = "https://cms.psgps.edu.in/payappapi_test/PayAppapi/EncryptionPayapp"
-const PAYAPP_DECRYPT_URL = "https://cms.psgps.edu.in/payappapi_test/PayAppapi/DycryptionPayapp"
+const PAYAPP_DECRYPT_URL = "https://cms.psgps.edu.in/payappapi_test/PayAppapi/DecryptionPayApp"
 const PAYAPP_PAY_URL = "https://cms.psgps.edu.in/payappapi_test/PayAppapi/Pay"
 
 interface PayAppPayload {
@@ -101,9 +101,19 @@ export async function encryptPayApp(data: PayAppPayload): Promise<string> {
       "APIClient_secret": clientSecret,
     },
     body: JSON.stringify(requestBody),
+    redirect: "manual", // CRITICAL: Don't follow redirects, we need the Location header
   })
 
-  // Get raw response text
+  // CRITICAL: Check for redirect Location header first
+  // PayApp encryption API returns a 302 redirect with the full payment URL
+  const location = response.headers.get("location")
+  
+  if (location) {
+    console.log("[PayApp] ✓ Got redirect Location header:", location.substring(0, 100) + "...")
+    return location // Return the full payment URL directly
+  }
+
+  // Fallback: Get raw response text
   const responseText = await response.text()
   
   // CRITICAL: Trim whitespace and check for HTML (error response)
@@ -181,6 +191,7 @@ export async function decryptPayApp(encryptedString: string): Promise<DecryptedR
   }
 
   console.log("[PayApp] Decrypting response, length:", encryptedString.length)
+  console.log("[PayApp] Encrypted string (first 100):", encryptedString.substring(0, 100))
 
   const response = await fetch(PAYAPP_DECRYPT_URL, {
     method: "POST",
@@ -190,7 +201,7 @@ export async function decryptPayApp(encryptedString: string): Promise<DecryptedR
       "APIClient_secret": clientSecret,
     },
     body: JSON.stringify({
-      dycryptstring: encryptedString,
+      Decryptstring: encryptedString,
     }),
   })
 
@@ -200,16 +211,34 @@ export async function decryptPayApp(encryptedString: string): Promise<DecryptedR
     throw new Error(`PayApp decryption failed: ${response.status}`)
   }
 
-  // Decryption API returns JSON
-  const decryptedJson = await response.json()
-  console.log("[PayApp] Decrypted JSON:", decryptedJson)
-  
-  return {
-    reg_id: decryptedJson.reg_id || "",
-    txn_id: decryptedJson.txn_id || "",
-    category: decryptedJson.category || "",
-    txnstatus: decryptedJson.txnstatus || "0",
-    paycatg_id: decryptedJson.paycatg_id ? parseInt(decryptedJson.paycatg_id) : undefined,
+  const responseText = await response.text()
+  console.log("[PayApp] Decryption raw response:", responseText)
+
+  // PayApp decryption returns a string like: "reg_id&category&txn_id&status"
+  // Parse it into structured data
+  try {
+    // Try JSON first (some APIs return JSON)
+    const decryptedJson = JSON.parse(responseText)
+    console.log("[PayApp] Decrypted JSON:", decryptedJson)
+    
+    return {
+      reg_id: decryptedJson.reg_id || "",
+      txn_id: decryptedJson.txn_id || "",
+      category: decryptedJson.category || "",
+      txnstatus: decryptedJson.txnstatus || decryptedJson.status || "0",
+      paycatg_id: decryptedJson.paycatg_id ? parseInt(decryptedJson.paycatg_id) : undefined,
+    }
+  } catch {
+    // Not JSON, parse as delimited string: "reg_id&category&txn_id&status"
+    const parts = responseText.split("&")
+    console.log("[PayApp] Decrypted string parts:", parts)
+    
+    return {
+      reg_id: parts[0] || "",
+      txn_id: parts[2] || "",
+      category: parts[1] || "",
+      txnstatus: parts[3] || "0",
+    }
   }
 }
 

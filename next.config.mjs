@@ -9,6 +9,15 @@ const nextConfig = {
   turbopack: {
     root: ".",
   },
+  // Rewrite PayApp callback URL to our verify endpoint
+  async rewrites() {
+    return [
+      {
+        source: '/ranleeconfirmation.aspx',
+        destination: '/api/payment/verify',
+      },
+    ]
+  },
 }
 
 export default nextConfig
