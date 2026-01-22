@@ -44,16 +44,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if event fee payment is completed (using UserPayment model)
-    const userPayment = await UserPayment.findOne({ userId: auth.userId })
-    
-    if (!userPayment || !userPayment.eventFeePaid) {
-      return NextResponse.json(
-        { error: "Event fee payment not completed. Please complete payment first." },
-        { status: 400 }
-      )
-    }
-
     const { eventId } = validationResult.data
 
     // Check if already registered

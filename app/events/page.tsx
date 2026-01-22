@@ -28,13 +28,13 @@ const workshops = [
 const otherEvents = [
 	{
 		id: "paper-presentation-1",
-		title: "Paper Presentation 1",
+		title: "Paper Presentation-UPSIRE",
 		description: "Present your research findings from the depths of the unknown.",
 		label: "001",
 	},
 	{
 		id: "paper-presentation-2",
-		title: "Paper Presentation 2",
+		title: "Paper Presentation-INQUISTA",
 		description: "Share discoveries that defy conventional understanding.",
 		label: "002",
 	},
@@ -52,19 +52,19 @@ const otherEvents = [
 	},
 	{
 		id: "bot-lf",
-		title: "BOT LF",
+		title: "BOT-PATHTRONIX",
 		description: "Line following automatons navigate the dark corridors.",
 		label: "005",
 	},
 	{
 		id: "bot-ba",
-		title: "BOT BA",
+		title: "BOT BATTLE ARENA",
 		description: "Battle arena where machines clash in supernatural combat.",
 		label: "006",
 	},
 	{
 		id: "design-event",
-		title: "Design Event",
+		title: "DESIGN-PIXFROGE",
 		description: "Create visuals that transcend dimensions and reality.",
 		label: "007",
 	},
@@ -75,11 +75,11 @@ const otherEvents = [
 		description: "Activities from another dimension, no tech required.",
 		label: "009",
 	},
-	{ id: "non-tech-2", title: "Non Tech", description: "More supernatural challenges await the brave.", label: "010" },
-	{ id: "tech", title: "Tech", description: "Technical challenges that push the boundaries of reality.", label: "011" },
+	{ id: "non-tech-2", title: "NON TECH - EQUINOX", description: "More supernatural challenges await the brave.", label: "010" },
+	{ id: "tech", title: "TECH EVENT-AMPERON", description: "Technical challenges that push the boundaries of reality.", label: "011" },
 	{
 		id: "flagship",
-		title: "Flagship",
+		title: "FF ARENA",
 		description: "The ultimate event. Face the Demogorgon of all challenges.",
 		label: "012",
 	},
