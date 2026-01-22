@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Add event to registered list
+    // Add event to registered list (payment can be done later)
     user.eventsRegistered.push(eventId)
     await user.save()
 

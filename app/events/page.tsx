@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FloatingParticles } from "@/components/floating-particles"
 import { useAuth } from "@/hooks/use-auth"
+import { useToast } from "@/hooks/use-toast"
 import { useState, useEffect } from "react"
 
 const workshops = [
@@ -211,6 +212,7 @@ function EventCard({
 
 export default function EventsPage() {
 	const { isLoggedIn, login, user, isLoading: authLoading, refetch } = useAuth()
+	const { toast } = useToast()
 	useEffect(() => {
 		refetch()
 	}, [refetch])
@@ -255,7 +257,11 @@ export default function EventsPage() {
 			const result = await response.json()
 
 			if (!response.ok) {
-				alert(result.error || "Registration failed")
+				toast({
+					variant: "destructive",
+					title: "Registration Failed",
+					description: result.error || "Unable to register for this event",
+				})
 				return
 			}
 
@@ -266,10 +272,18 @@ export default function EventsPage() {
 				setUserData(data)
 			}
 
-			alert("Successfully registered for event!")
+			toast({
+				variant: "success",
+				title: "Registration Successful!",
+				description: "You have been registered for this event.",
+			})
 		} catch (error) {
 			console.error("Error registering for event:", error)
-			alert("An error occurred while registering")
+			toast({
+				variant: "destructive",
+				title: "Error",
+				description: "An error occurred while registering. Please try again.",
+			})
 		}
 	}
 

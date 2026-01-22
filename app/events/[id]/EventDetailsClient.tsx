@@ -3,9 +3,11 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
 
 interface EventDetailsClientProps {
   eventId: string;
+  isRegistered: boolean;
   event: {
     title: string;
     mode?: string;
@@ -20,13 +22,14 @@ interface EventDetailsClientProps {
   };
 }
 
-const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId, event }) => {
+const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId, event, isRegistered: initialIsRegistered }) => {
     const isWorkshop = eventId.startsWith("workshop-");
   const router = useRouter()
+  const { toast } = useToast()
   const [isRegistering, setIsRegistering] = useState(false)
+  const [isRegistered, setIsRegistered] = useState(initialIsRegistered)
 
   const handleRegister = async () => {
-    // TODO: Add payment check logic if needed
     setIsRegistering(true)
     try {
       const response = await fetch("/api/user/register-event", {
@@ -38,16 +41,31 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId, event 
       const result = await response.json()
 
       if (!response.ok) {
-        alert(result.error || "Registration failed")
+        toast({
+          variant: "destructive",
+          title: "Registration Failed",
+          description: result.error || "Unable to register for this event",
+        })
         return
       }
 
-      // Refresh the page to show updated registration status
+      // Update local state and refresh page
+      setIsRegistered(true)
       router.refresh()
-      alert("Successfully registered for event!")
+      toast({
+        variant: "success",
+        title: "Registration Successful!",
+        description: "You have been registered for this event.",
+      })
     } catch (error) {
       console.error("Error registering for event:", error)
-      alert("An error occurred while registering")
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "An error occurred while registering. Please try again.",
+      })
+    } finally {
+      setIsRegistering(false)
     }
   };
 
@@ -325,15 +343,21 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId, event 
               >
                 <button
                   onClick={handleRegister}
-                  disabled={isRegistering}
-                  className="group relative inline-flex items-center justify-center px-8 sm:px-12 py-3 sm:py-4 bg-transparent border-2 border-red-600 text-red-500 font-serif text-base sm:text-lg tracking-[0.15em] overflow-hidden transition-all duration-300 hover:text-red-300 hover:border-red-500 hover:shadow-[0_0_40px_rgba(220,38,38,0.7)] animate-border-pulse disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isRegistering || isRegistered}
+                  className={`group relative inline-flex items-center justify-center px-8 sm:px-12 py-3 sm:py-4 bg-transparent border-2 font-serif text-base sm:text-lg tracking-[0.15em] overflow-hidden transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isRegistered 
+                      ? 'border-green-600 text-green-500' 
+                      : 'border-red-600 text-red-500 hover:text-red-300 hover:border-red-500 hover:shadow-[0_0_40px_rgba(220,38,38,0.7)] animate-border-pulse'
+                  }`}
                 >
                   <span className="absolute inset-0 flex items-center justify-center">
                     <span className="absolute w-2 h-2 bg-red-600/50 rounded-full opacity-0 group-hover:animate-portal-ripple" />
                   </span>
-                  <span className="absolute inset-0 bg-red-600/0 group-hover:bg-red-600/20 transition-all duration-300" />
+                  <span className={`absolute inset-0 transition-all duration-300 ${
+                    isRegistered ? 'bg-green-600/10' : 'bg-red-600/0 group-hover:bg-red-600/20'
+                  }`} />
                   <span className="relative z-10 group-hover:animate-button-glitch">
-                    {isRegistering ? "REGISTERING..." : "REGISTER NOW →"}
+                    {isRegistering ? "REGISTERING..." : isRegistered ? "✓ REGISTERED" : "REGISTER NOW →"}
                   </span>
                 </button>
               </div>
