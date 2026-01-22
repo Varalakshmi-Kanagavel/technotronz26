@@ -462,6 +462,7 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
     <EventDetailsClient
       eventId={id}
       event={event}
+      isRegistered={isRegistered}
     />
   )
 }
