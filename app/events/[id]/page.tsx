@@ -17,6 +17,7 @@ const eventData: Record<
     requirements?: string[]
     EntryFee: string
     dateTime: string
+    topics?:string[]
     rules: string[]
     coordinators: { name: string; phone: string }[]
     fileCode: string

@@ -366,6 +366,8 @@ export default function WorkshopDetailsPage({ params }: { params: Promise<{ id: 
                 </h2>
                 <p className="text-gray-300 text-sm sm:text-base font-mono">{workshop.dateTime}</p>
               </section>
+{/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-red-800/50 to-transparent" />
 
               {/* Entry Fee */}
               <section

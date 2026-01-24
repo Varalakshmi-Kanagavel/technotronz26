@@ -268,7 +268,7 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId, event,
               {/* Divider */}
               <div className="h-px bg-gradient-to-r from-transparent via-red-800/50 to-transparent" />
 
-              {/* Venue & Date/Time */}
+              {/* Mode */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <section
                   className="animate-content-fade-in opacity-0"
@@ -298,6 +298,8 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId, event,
               </div>
 
               {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-red-800/50 to-transparent" />
+{/* Divider */}
               <div className="h-px bg-gradient-to-r from-transparent via-red-800/50 to-transparent" />
 
               {/* Entry Fee */}
@@ -347,7 +349,6 @@ const EventDetailsClient: React.FC<EventDetailsClientProps> = ({ eventId, event,
                   <div className="h-px bg-gradient-to-r from-transparent via-red-800/50 to-transparent" />
                 </>
               )}
-
               {/* Rules & Guidelines */}
               <section
                 className="animate-content-fade-in opacity-0"
